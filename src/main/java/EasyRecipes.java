@@ -95,4 +95,4 @@ public class EasyRecipes {
 			return o;
 		}
 	}
-}}
+}
