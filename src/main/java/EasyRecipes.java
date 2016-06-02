@@ -1,4 +1,3 @@
-import com.sun.corba.se.impl.io.TypeMismatchException;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,11 +16,11 @@ public class EasyRecipes {
 	private static IRecipePart[] nullarr = new IRecipePart[9];
 	private static List<IRecipePart> nulllist = Arrays.asList(nullarr);
 
-	public static void add(ItemStack result, Object... parts) throws TypeMismatchException {
+	public static void add(ItemStack result, Object... parts) throws RuntimeException {
 		GameRegistry.addRecipe(toRecipe(result, parts));
 	}
 
-	public static ShapedOreRecipe toRecipe(ItemStack result, Object... parts) throws TypeMismatchException {
+	public static ShapedOreRecipe toRecipe(ItemStack result, Object... parts) throws RuntimeException {
 		List<IRecipePart> topass = new ArrayList<>();
 		for (Object part : parts) {
 			if (part instanceof IRecipePart) {
@@ -33,7 +32,7 @@ public class EasyRecipes {
 			} else if (part instanceof String) {
 				topass.add(new Wrapper(part));
 			} else {
-				throw new TypeMismatchException("Received a " + part.getClass().getSimpleName() + " instead of a recipe part");
+				throw new RuntimeException("Received a " + part.getClass().getSimpleName() + " instead of a recipe part");
 			}
 		}
 		return toRecipe(result, topass);
