@@ -1,7 +1,10 @@
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ArrayMatcher implements IMatcher {
 	public final IRecipePart[] parts;
@@ -14,7 +17,15 @@ public class ArrayMatcher implements IMatcher {
 
 	@Override
 	public boolean matches(ItemStack stack, int slot) {
-		return parts[slot].get(slot) == stack;
+		IRecipePart part = parts[slot];
+		Object piece = part.get(slot);
+		try {
+			return piece == stack || OreDictionary.getOres((String) piece).contains(stack);
+		} catch (ClassCastException c) {
+			Logger.getAnonymousLogger().log(Level.SEVERE, c.getLocalizedMessage() + ": " + part.getClass().getSimpleName() +
+				" returned an object that was neither String nor ItemStack");
+			return false;
+		}
 	}
 
 	@Override
