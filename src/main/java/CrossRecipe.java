@@ -17,7 +17,7 @@ public class CrossRecipe extends SimpleRecipe {
 
 		@Override
 		public Object get(int position) {
-			return position % 2 == 0 ? bounder.get(position) : crosser.get(position);
+			return position % 2 == 0 ? crosser.get(position) : bounder.get(position);
 		}
 	}
 }
