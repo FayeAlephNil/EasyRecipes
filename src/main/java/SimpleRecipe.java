@@ -20,11 +20,6 @@ public class SimpleRecipe extends SlotRecipe {
 		super(result, new ArrayMatcher(convert(parts)));
 		this.arrMatcher = (ArrayMatcher) this.matcher;
 	}
-	
-	public SimpleRecipe(ItemStack result, Object part) {
-		super(result, new ArrayMatcher(allArr(convert(part), 9)));
-		this.arrMatcher = (ArrayMatcher) this.matcher;
-	}
 
 	public static void add(ItemStack result, Object... parts) {
 		GameRegistry.addRecipe(toRecipe(result, parts));
@@ -95,19 +90,7 @@ public class SimpleRecipe extends SlotRecipe {
 		return topass;
 	}
 
-	protected static <T> List<T> allList(T thing, int size) {
-		List<T> list = new ArrayList<>();
 
-		for (int i = 0; i < size; i++) {
-			list.add(thing);
-		}
-
-		return list;
-	}
-
-	protected static <T> T[] allArr(T thing, int size) {
-		return (T[]) allList(thing, size).toArray();
-	}
 
 	protected static IRecipePart convert(Object part) {
 		if (part instanceof IRecipePart) {

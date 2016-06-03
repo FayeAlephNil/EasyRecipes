@@ -1,6 +1,6 @@
 import net.minecraft.item.ItemStack;
 
-public class CenteredRecipe extends SimpleRecipe {
+public class CenteredRecipe extends PartRecipe {
 	public CenteredRecipe(ItemStack result, Object center, Object outer, Object inner) {
 		this(result, convert(center), convert(outer), convert(inner));
 	}
