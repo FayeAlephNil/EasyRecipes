@@ -3,8 +3,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class implements @IMatcher
@@ -29,7 +27,7 @@ public class ArrayMatcher implements IMatcher {
 		} else {
 			String toLog = part.getClass().getSimpleName() + " returned an object that was neither String nor ItemStack, but was"
 				+ piece.getClass().getSimpleName();
-			Logger.getAnonymousLogger().log(Level.SEVERE, toLog);
+			Logger.error(toLog);
 			return false;
 		}
 	}
