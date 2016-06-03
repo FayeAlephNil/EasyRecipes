@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class implements @IMatcher
+ */
 public class ArrayMatcher implements IMatcher {
 	public final IRecipePart[] parts;
 	public final List<IRecipePart> partsList;
@@ -19,11 +22,14 @@ public class ArrayMatcher implements IMatcher {
 	public boolean matches(ItemStack stack, int slot) {
 		IRecipePart part = parts[slot];
 		Object piece = part.get(slot);
-		try {
-			return piece == stack || OreDictionary.getOres((String) piece).contains(stack);
-		} catch (ClassCastException c) {
-			Logger.getAnonymousLogger().log(Level.SEVERE, c.getLocalizedMessage() + ": " + part.getClass().getSimpleName() +
-				" returned an object that was neither String nor ItemStack");
+		if (piece instanceof ItemStack) {
+			return ItemStack.areItemStacksEqual((ItemStack) piece, stack);
+		} else if (piece instanceof String) {
+			return OreDictionary.getOres((String) piece).contains(stack);
+		} else {
+			String toLog = part.getClass().getSimpleName() + " returned an object that was neither String nor ItemStack, but was"
+				+ piece.getClass().getSimpleName();
+			Logger.getAnonymousLogger().log(Level.SEVERE, toLog);
 			return false;
 		}
 	}
