@@ -11,13 +11,18 @@ import java.util.List;
 
 public class SimpleRecipe extends SlotRecipe {
 	private static char[] chars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
-	private static IRecipePart[] nullarr = new IRecipePart[9];
+	protected static IRecipePart[] nullarr = new IRecipePart[9];
 	private static List<IRecipePart> nulllist = Arrays.asList(nullarr);
 
 	protected final ArrayMatcher arrMatcher;
 
 	public SimpleRecipe(ItemStack result, Object... parts) {
-		super(result, new ArrayMatcher(SimpleRecipe.convert(parts)));
+		super(result, new ArrayMatcher(convert(parts)));
+		this.arrMatcher = (ArrayMatcher) this.matcher;
+	}
+	
+	public SimpleRecipe(ItemStack result, Object part) {
+		super(result, new ArrayMatcher(allArr(convert(part), 9)));
 		this.arrMatcher = (ArrayMatcher) this.matcher;
 	}
 
@@ -81,27 +86,45 @@ public class SimpleRecipe extends SlotRecipe {
 		return result;
 	}
 
-	private static IRecipePart[] convert(Object... parts) {
+	protected static IRecipePart[] convert(Object... parts) {
 		IRecipePart[] topass = new IRecipePart[parts.length];
 		for (int i = 0; i < parts.length; i++) {
 			Object part = parts[i];
-			if (part instanceof IRecipePart) {
-				topass[i] = (IRecipePart) part;
-			} else if (part instanceof ItemStack) {
-				topass[i] = new Wrapper(part);
-			} else if (part instanceof Item) {
-				topass[i] = new Wrapper(new ItemStack((Item) part));
-			} else if (part instanceof String) {
-				topass[i] = new Wrapper(part);
-			} else if (part instanceof Block) {
-				topass[i] = new Wrapper(new ItemStack((Block) part));
-			} else {
-				throw new RuntimeException("Received a " + part.getClass().getSimpleName() + " instead of a recipe part");
-			}
+			topass[i] = convert(part);
 		}
 		return topass;
 	}
 
+	protected static <T> List<T> allList(T thing, int size) {
+		List<T> list = new ArrayList<>();
+
+		for (int i = 0; i < size; i++) {
+			list.add(thing);
+		}
+
+		return list;
+	}
+
+	protected static <T> T[] allArr(T thing, int size) {
+		return (T[]) allList(thing, size).toArray();
+	}
+
+	protected static IRecipePart convert(Object part) {
+		if (part instanceof IRecipePart) {
+			return (IRecipePart) part;
+		} else if (part instanceof ItemStack) {
+			return new Wrapper(part);
+		} else if (part instanceof Item) {
+			return new Wrapper(new ItemStack((Item) part));
+		} else if (part instanceof String) {
+			return new Wrapper(part);
+		} else if (part instanceof Block) {
+			return new Wrapper(new ItemStack((Block) part));
+		} else {
+			throw new RuntimeException("Received a " + part.getClass().getSimpleName() + " instead of a recipe part");
+		}
+	}
+	
 	private static class Wrapper implements IRecipePart {
 		private final Object o;
 
